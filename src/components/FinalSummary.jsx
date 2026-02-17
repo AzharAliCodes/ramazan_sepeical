@@ -42,7 +42,7 @@ const FinalSummary = ({ scores }) => {
             <span className="text-lg font-bold text-emerald-600">{scores.discipline}%</span>
           </div>
 
-          <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg col-span-2">
+          <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg sm:col-span-2">
             <span className="text-base font-medium text-gray-700">❤️ Good Deeds:</span>
             <span className="text-lg font-bold text-emerald-600">{scores.goodDeeds}%</span>
           </div>
