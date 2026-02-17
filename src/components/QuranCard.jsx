@@ -8,10 +8,6 @@ const QuranCard = ({ quran, onChange }) => {
     onChange({ ...quran, pages: parseInt(value) || 0 });
   };
 
-  const handleSurahChange = (value) => {
-    onChange({ ...quran, surah: value });
-  };
-
   const getProgressColor = () => {
     if (score >= 70) return 'bg-green-500';
     if (score >= 40) return 'bg-yellow-500';
@@ -24,34 +20,24 @@ const QuranCard = ({ quran, onChange }) => {
         📖 Quran Reading
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Pages Read
-          </label>
-          <input
-            type="number"
-            min="0"
-            max="100"
-            value={quran.pages}
-            onChange={(e) => handlePagesChange(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-            placeholder="0"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Surah Name
-          </label>
-          <input
-            type="text"
-            value={quran.surah}
-            onChange={(e) => handleSurahChange(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-            placeholder="Al-Baqarah"
-          />
-        </div>
+      <div className="mb-4 md:mb-6">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Pages Read
+        </label>
+        <input
+          type="number"
+          min="0"
+          max="999"
+          value={quran.pages > 0 ? quran.pages : ''}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === '' || (parseInt(value) >= 0 && parseInt(value) <= 999)) {
+              handlePagesChange(value === '' ? '0' : value);
+            }
+          }}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+          placeholder="0"
+        />
       </div>
 
       {/* Target Display */}
