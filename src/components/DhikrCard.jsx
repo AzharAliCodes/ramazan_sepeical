@@ -6,7 +6,7 @@ const DhikrCard = ({ dhikr, onChange }) => {
 
   const handleCheckboxChange = (name, value) => {
     // When checked, set to target (300), when unchecked set to 0
-    onChange({ ...dhikr, [name]: value ? 300 : 0 });
+    onChange({ ...dhikr, [name]: value ? 400 : 0 });
   };
 
   const getProgressColor = () => {

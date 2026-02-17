@@ -14,7 +14,8 @@ export const TARGETS = {
   dhikr: {
     subhanallah: 300,
     alhamdulillah: 300,
-    allahuAkbar: 300
+    allahuAkbar: 300,
+    daroodh: 100
   },
   maxScreenTime: 5 // hours
 };
@@ -71,9 +72,11 @@ export const calculateDhikrScore = (dhikr) => {
   const subhanallahPercent = Math.min((dhikr.subhanallah || 0) / TARGETS.dhikr.subhanallah, 1);
   const alhamdulillahPercent = Math.min((dhikr.alhamdulillah || 0) / TARGETS.dhikr.alhamdulillah, 1);
   const allahuAkbarPercent = Math.min((dhikr.allahuAkbar || 0) / TARGETS.dhikr.allahuAkbar, 1);
+  const daroodhPercent = Math.min((dhikr.daroodh || 0) / TARGETS.dhikr.daroodh, 1);  
   
-  return ((subhanallahPercent + alhamdulillahPercent + allahuAkbarPercent) / 3) * 100;
+  return ((subhanallahPercent + alhamdulillahPercent + allahuAkbarPercent + daroodhPercent) / 4) * 100;  // ✅ Divided by 4
 };
+
 
 // Calculate Discipline score (0-100%)
 export const calculateDisciplineScore = (screenTime) => {
