@@ -10,18 +10,28 @@ export const updateQuranGlobalState = (allData, dayNumber, updatedDayData) => {
   
   dayKeys.forEach((key) => {
     const day = key === dayNumber ? updatedDayData : allData.days[key];
-    if (day.quran && day.quran.pagesRead > 0) {
-      totalPagesRead += day.quran.pagesRead;
+    if (day.quran && day.quran.startPage && day.quran.endPage) {
+      // Calculate pagesRead dynamically
+      const pagesRead = day.quran.endPage - day.quran.startPage;
+      if (pagesRead > 0) {
+        totalPagesRead += pagesRead;
+      }
     }
   });
 
   // Calculate current page and khatam count
-  currentPage = 2 + (totalPagesRead % 610);
-  khatamCount = Math.floor(totalPagesRead / 610);
-
-  // If we've reached exactly 612, we're at the start of next Khatam
-  if (currentPage > 612) {
-    currentPage = 2 + ((totalPagesRead - 610) % 610);
+  // Each Khatam = 610 pages (page 2 to 612)
+  const PAGES_PER_KHATAM = 610;
+  
+  khatamCount = Math.floor(totalPagesRead / PAGES_PER_KHATAM);
+  const pagesInCurrentKhatam = totalPagesRead % PAGES_PER_KHATAM;
+  
+  // Current page = 2 + remainder (auto-resets to 2 after each Khatam)
+  currentPage = 2 + pagesInCurrentKhatam;
+  
+  // If exactly at or past 612, reset to 2 for next Khatam
+  if (currentPage >= 612) {
+    currentPage = 2;
   }
 
   // Update all days with global state

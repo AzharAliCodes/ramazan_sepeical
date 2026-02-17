@@ -1,36 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { calculateQuranScore, TARGETS } from '../utils/scoring';
 
 const QuranCard = ({ quran, onChange, currentDay, allData }) => {
   const score = calculateQuranScore(quran);
   const [error, setError] = useState('');
   const [manualEdit, setManualEdit] = useState(false);
+  const lastDayRef = useRef(currentDay);
+  const initializedRef = useRef(false);
 
-  // Auto-set start page from the last filled end page from any previous day
+  // Auto-set start page from the global current page position
   useEffect(() => {
-    if (!manualEdit) {
+    // Reset initialized flag when day changes
+    if (lastDayRef.current !== currentDay) {
+      lastDayRef.current = currentDay;
+      initializedRef.current = false;
+    }
+
+    // Only run once per day unless manually editing
+    if (!manualEdit && !initializedRef.current) {
       if (currentDay > 1 && allData && allData.days) {
-        // Search backward from the previous day to find the last filled end page
-        let lastEndPage = null;
-        for (let i = currentDay - 1; i >= 1; i--) {
-          const day = allData.days[i];
-          if (day && day.quran && day.quran.endPage > 0) {
-            lastEndPage = day.quran.endPage;
-            break; // Found the most recent end page
-          }
-        }
+        // Use the global currentPage which auto-resets after Khatam
+        const globalCurrentPage = quran.currentPage || 2;
         
-        // Set start page from last filled day, or default to 2 if none found
-        const startPage = lastEndPage || 2;
-        if (quran.startPage === 0 || quran.startPage !== startPage) {
-          onChange({ ...quran, startPage });
+        // Only update if different from current start page
+        if (quran.startPage !== globalCurrentPage) {
+          onChange({ ...quran, startPage: globalCurrentPage });
+          initializedRef.current = true;
+        } else if (quran.startPage === globalCurrentPage) {
+          initializedRef.current = true;
         }
       } else if (currentDay === 1 && quran.startPage === 0) {
         // Day 1 starts at page 2
         onChange({ ...quran, startPage: 2 });
+        initializedRef.current = true;
+      } else if (quran.startPage > 0) {
+        initializedRef.current = true;
       }
     }
-  }, [currentDay, allData, manualEdit]);
+  }, [currentDay, manualEdit]);
 
   // Calculate pages read whenever start/end changes (can be negative if going backward)
   useEffect(() => {
@@ -60,13 +67,15 @@ const QuranCard = ({ quran, onChange, currentDay, allData }) => {
   };
 
   const handleEndPageChange = (value) => {
-    const page = parseInt(value) || 0;
+    let page = parseInt(value) || 0;
     setError('');
 
     if (page < 0) return;
+    
+    // Clamp to max 612
     if (page > 612) {
+      page = 612;
       setError('End page cannot exceed 612');
-      return;
     }
 
     onChange({ ...quran, endPage: page });

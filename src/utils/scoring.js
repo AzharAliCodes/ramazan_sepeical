@@ -61,7 +61,9 @@ export const calculateSalahScore = (salah) => {
 // Calculate Quran score (0-100%)
 export const calculateQuranScore = (quran) => {
   const pages = quran.pagesRead || 0;
-  return Math.min((pages / TARGETS.quranPages) * 100, 100);
+  // Prevent negative scores (when backward reading)
+  const positivePages = Math.max(pages, 0);
+  return Math.min((positivePages / TARGETS.quranPages) * 100, 100);
 };
 
 // Calculate Dhikr score (0-100%)

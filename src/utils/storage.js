@@ -19,7 +19,6 @@ export const getEmptyDayData = () => ({
   quran: {
     startPage: 0,        // Daily start page (2-612)
     endPage: 0,          // Daily end page (2-612)
-    pagesRead: 0,        // Auto-calculated: endPage - startPage
     totalPagesRead: 0,   // Cumulative total across all days (global)
     currentPage: 2,      // Current position in Quran (2-612, global)
     khatamCount: 0       // Number of completions (global)
