@@ -85,11 +85,12 @@ export const calculateDisciplineScore = (screenTime) => {
 // Calculate Good Deeds score (0-100%)
 export const calculateGoodDeedsScore = (goodDeeds) => {
   const totalPoints = goodDeeds.reduce((sum, deed) => {
-    if (!deed.description) return sum;
-    return sum + (DEED_POINTS[deed.size] || 0);
+    // Each good deed with content = 20 points
+    if (deed && deed.trim()) return sum + 20;
+    return sum;
   }, 0);
   
-  // Max possible: 5 big deeds = 100 points
+  // Max possible: 5 deeds = 100 points
   return Math.min((totalPoints / 100) * 100, 100);
 };
 

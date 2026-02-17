@@ -1,18 +1,13 @@
 import React from 'react';
-import { calculateGoodDeedsScore, DEED_POINTS } from '../utils/scoring';
+import { calculateGoodDeedsScore } from '../utils/scoring';
 
 const GoodDeedsCard = ({ goodDeeds, onChange }) => {
   const score = calculateGoodDeedsScore(goodDeeds);
 
-  const handleDeedChange = (index, field, value) => {
+  const handleDeedChange = (index, value) => {
     const newDeeds = [...goodDeeds];
-    newDeeds[index] = { ...newDeeds[index], [field]: value };
+    newDeeds[index] = value;
     onChange(newDeeds);
-  };
-
-  const calculatePoints = (deed) => {
-    if (!deed.description) return 0;
-    return DEED_POINTS[deed.size] || 0;
   };
 
   const getProgressColor = () => {
@@ -29,41 +24,16 @@ const GoodDeedsCard = ({ goodDeeds, onChange }) => {
 
       <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
         {goodDeeds.map((deed, index) => (
-          <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-3 p-2 md:p-3 bg-gray-50 rounded-lg">
+          <div key={index} className="p-2 md:p-3 bg-gray-50 rounded-lg">
             <input
               type="text"
-              value={deed.description}
-              onChange={(e) => handleDeedChange(index, 'description', e.target.value)}
-              className="flex-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm md:text-base"
+              value={deed}
+              onChange={(e) => handleDeedChange(index, e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm md:text-base"
               placeholder={`Good deed #${index + 1}`}
             />
-            
-            <div className="flex items-center gap-2 md:gap-3 w-full sm:w-auto">
-              <select
-                value={deed.size}
-                onChange={(e) => handleDeedChange(index, 'size', e.target.value)}
-                className="flex-1 sm:flex-none px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white cursor-pointer text-sm md:text-base"
-              >
-                <option value="small">Small</option>
-                <option value="medium">Medium</option>
-                <option value="big">Big</option>
-              </select>
-              
-              <div className="min-w-[60px] text-right">
-                <span className="text-sm font-bold text-emerald-600">
-                  +{calculatePoints(deed)}
-                </span>
-              </div>
-            </div>
           </div>
         ))}
-      </div>
-
-      {/* Points Guide */}
-      <div className="mb-6 p-3 bg-blue-50 rounded-lg">
-        <p className="text-xs text-gray-700">
-          <span className="font-semibold">Points:</span> Small = 5, Medium = 10, Big = 20
-        </p>
       </div>
 
       {/* Progress Bar */}

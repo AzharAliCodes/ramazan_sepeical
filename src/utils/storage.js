@@ -29,13 +29,7 @@ export const getEmptyDayData = () => ({
     screenTime: 0
   },
   gratitude: ['', '', ''],
-  goodDeeds: [
-    { description: '', size: 'small' },
-    { description: '', size: 'small' },
-    { description: '', size: 'small' },
-    { description: '', size: 'small' },
-    { description: '', size: 'small' }
-  ]
+  goodDeeds: ['', '', '', '', '']
 });
 
 // Initialize storage structure
@@ -59,7 +53,26 @@ export const loadData = () => {
     if (!stored) {
       return initializeStorage();
     }
-    return JSON.parse(stored);
+    
+    const data = JSON.parse(stored);
+    
+    // Migrate old good deeds format (objects) to new format (strings)
+    if (data.days) {
+      Object.keys(data.days).forEach(dayKey => {
+        const day = data.days[dayKey];
+        if (day.goodDeeds && day.goodDeeds.length > 0) {
+          // Check if old format (object with description field)
+          if (typeof day.goodDeeds[0] === 'object' && day.goodDeeds[0].description !== undefined) {
+            // Migrate to new format (simple strings)
+            day.goodDeeds = day.goodDeeds.map(deed => deed.description || '');
+          }
+        }
+      });
+      // Save migrated data
+      saveData(data);
+    }
+    
+    return data;
   } catch (error) {
     console.error('Error loading data:', error);
     return initializeStorage();
