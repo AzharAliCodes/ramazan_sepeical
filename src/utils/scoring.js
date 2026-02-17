@@ -40,36 +40,33 @@ export const calculateSalahScore = (salah) => {
   // Fard prayers = 50% total (10% each)
   const fardPercentage = (fardCount / 5) * 50;
   
-  // Extra salah bonus (max 50%)
+  // Extra salah bonuses (adjusted to max 50% total)
   let bonus = 0;
-  if (salah.tahajjud) bonus += 15;
-  if (salah.duha) bonus += 10;
   
-  // Taraweeh bonus based on rakaat count (up to 15% for 20 rakaat)
-  const taraweehBonus = Math.min((salah.taraweeh || 0) / 20 * 15, 15);
+  if (salah.tahajjud) bonus += 12;  // 12%
+  if (salah.duha) bonus += 8;       // 8%
+  
+  // Taraweeh bonus (up to 12% for 20 rakaat)
+  const taraweehBonus = Math.min((salah.taraweeh || 0) / 20 * 12, 12);
   bonus += taraweehBonus;
   
-  if (salah.witr) bonus += 5;
+  if (salah.witr) bonus += 4;  // 4%
   
-  // Sunnah rakaat bonuses
-  // Fixed 24 rakaat = up to 5%
-  const sunnahBonus = Math.min((salah.sunnahRakaat || 0) / 26 * 5, 5);
+  // All Sunnah prayers combined (up to 14% for all)
+  // Fajr (2) + before Dhuhr (4) + after Dhuhr (4) + before Asr (4) + after Maghrib (2) + before Isha (2) + after Isha (2) = 20 rakaat max
+  const totalSunnah = (salah.sunnahFajr || 0) +
+                      (salah.sunnahBeforeDhuhr || 0) + 
+                      (salah.sunnahAfterDhuhr || 0) + 
+                      (salah.sunnahBeforeAsr || 0) +
+                      (salah.sunnahAfterMaghrib || 0) +
+                      (salah.sunnahBeforeIsha || 0) +
+                      (salah.sunnahAfterIsha || 0);
+  const sunnahBonus = Math.min(totalSunnah / 20 * 14, 14);
   bonus += sunnahBonus;
   
-  // Additional variable Sunnah prayers
-  // Possible: before Dhuhr (4) + after Dhuhr (4) + before Asr (4) + after Maghrib (2) + before Isha (4) + after Isha (4) = 22 rakaat max
-  // Contributing up to 7% total
-  const totalVariableSunnah = (salah.sunnahBeforeDhuhr || 0) + 
-                               (salah.sunnahAfterDhuhr || 0) + 
-                               (salah.sunnahBeforeAsr || 0) +
-                               (salah.sunnahAfterMaghrib || 0) +
-                               (salah.sunnahBeforeIsha || 0) +
-                               (salah.sunnahAfterIsha || 0);
-  const variableSunnahBonus = Math.min(totalVariableSunnah / 22 * 7, 7);
-  bonus += variableSunnahBonus;
-  
-  // Total = Fard (50%) + Bonuses (max 50%) = max 100%
-  return fardPercentage + bonus;
+  // Total bonuses: 12 + 8 + 12 + 4 + 14 = 50% max
+  // Total = Fard (50%) + Bonuses (max 50%) = 100% max
+  return Math.min(fardPercentage + bonus, 100);
 };
 
 // Calculate Quran score (0-100%)

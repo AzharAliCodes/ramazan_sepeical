@@ -14,13 +14,13 @@ export const getEmptyDayData = () => ({
     duha: false,
     taraweeh: 0,
     witr: false,
-    sunnahRakaat: 0,
+    sunnahFajr: 0,         // 0 or 2
     sunnahBeforeDhuhr: 0,  // 0, 2, or 4
     sunnahAfterDhuhr: 0,   // 0, 2, or 4
     sunnahBeforeAsr: 0,    // 0, 2, or 4
     sunnahAfterMaghrib: 0, // 0 or 2
-    sunnahBeforeIsha: 0,   // 0, 2, or 4
-    sunnahAfterIsha: 0     // 0, 2, or 4
+    sunnahBeforeIsha: 0,   // 0 or 2
+    sunnahAfterIsha: 0     // 0 or 2
   },
   quran: {
     startPage: 0,        // Daily start page (2-612)
