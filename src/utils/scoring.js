@@ -50,8 +50,8 @@ export const calculateSalahScore = (salah) => {
   
   if (salah.witr) bonus += 5;
   
-  // Sunnah rakaat bonus (up to 5%)
-  const sunnahBonus = Math.min((salah.sunnahRakaat || 0) / 20, 5);
+  // Sunnah rakaat bonus (up to 5% for 26 rakaat)
+  const sunnahBonus = Math.min((salah.sunnahRakaat || 0) / 26 * 5, 5);
   bonus += sunnahBonus;
   
   // Total = Fard (50%) + Bonuses (max 50%) = max 100%

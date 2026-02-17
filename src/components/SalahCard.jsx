@@ -81,7 +81,7 @@ const SalahCard = ({ salah, onChange }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
             { name: 'tahajjud', label: 'Tahajjud' },
-            { name: 'duha', label: 'Duha' },
+            { name: 'duha', label: 'Ishraq' },
             { name: 'witr', label: 'Witr' }
           ].map(({ name, label }) => (
             <label key={name} className="flex items-center cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors">
