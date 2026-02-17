@@ -69,7 +69,7 @@ const SalahCard = ({ salah, onChange }) => {
                   onChange={(e) => onChange({ ...salah, sunnahBeforeDhuhr: e.target.checked ? 4 : 0 })}
                   className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-2 focus:ring-purple-500 cursor-pointer"
                 />
-                <span className="ml-2 text-sm font-medium text-purple-800">Sunnah Before Dhuhr</span>
+                <span className="ml-2 text-sm font-medium text-purple-800">Sunnah Before Zuhar</span>
               </label>
             </div>
             {salah.sunnahBeforeDhuhr > 0 && (
@@ -105,7 +105,8 @@ const SalahCard = ({ salah, onChange }) => {
                 onChange={(e) => handleCheckboxChange('dhuhr', e.target.checked)}
                 className="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-2 focus:ring-green-500 cursor-pointer"
               />
-              <span className="ml-3 text-base font-medium text-gray-800">Dhuhr</span>
+              <span className="ml-3 text-base font-medium text-gray-800">Zuhar
+              </span>
             </label>
             <span className="text-sm font-semibold text-gray-600">
               {salah.dhuhr ? '20%' : '0%'}
@@ -122,7 +123,7 @@ const SalahCard = ({ salah, onChange }) => {
                   onChange={(e) => onChange({ ...salah, sunnahAfterDhuhr: e.target.checked ? 4 : 0 })}
                   className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-2 focus:ring-purple-500 cursor-pointer"
                 />
-                <span className="ml-2 text-sm font-medium text-purple-800">Sunnah After Dhuhr</span>
+                <span className="ml-2 text-sm font-medium text-purple-800">Sunnah After Zuhar</span>
               </label>
             </div>
             {salah.sunnahAfterDhuhr > 0 && (
