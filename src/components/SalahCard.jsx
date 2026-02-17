@@ -50,7 +50,7 @@ const SalahCard = ({ salah, onChange }) => {
                 <span className="ml-3 text-base font-medium text-gray-800">{label}</span>
               </label>
               <span className="text-sm font-semibold text-gray-600">
-                {salah[name] ? '20%' : '0%'}
+                {salah[name] ? '10%' : '0%'}
               </span>
             </div>
           ))}
@@ -144,7 +144,7 @@ const SalahCard = ({ salah, onChange }) => {
       <div className="mt-6 p-4 bg-emerald-50 rounded-lg">
         <div className="flex justify-between items-center">
           <span className="text-base font-semibold text-gray-800">
-            Total Salah Score {totalScore > 100 && <span className="text-xs text-emerald-600">(with bonus)</span>}
+            Total Salah Score 
           </span>
           <span className="text-2xl font-bold text-emerald-600">
             {Math.round(totalScore)}%

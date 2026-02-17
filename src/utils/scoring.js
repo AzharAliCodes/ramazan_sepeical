@@ -26,7 +26,7 @@ export const DEED_POINTS = {
   big: 20
 };
 
-// Calculate Salah score (0-100%)
+// Calculate Salah score (0-100% max)
 export const calculateSalahScore = (salah) => {
   const fardCount = [
     salah.fajr,
@@ -36,24 +36,26 @@ export const calculateSalahScore = (salah) => {
     salah.isha
   ].filter(Boolean).length;
   
-  const fardPercentage = (fardCount / 5) * 100; // Each fard = 20%
+  // Fard prayers = 50% total (10% each)
+  const fardPercentage = (fardCount / 5) * 50;
   
-  // Extra salah bonus (max 20%)
+  // Extra salah bonus (max 50%)
   let bonus = 0;
-  if (salah.tahajjud) bonus += 5;
-  if (salah.duha) bonus += 5;
+  if (salah.tahajjud) bonus += 15;
+  if (salah.duha) bonus += 10;
   
-  // Taraweeh bonus based on rakaat count (up to 5% for 20 rakaat)
-  const taraweehBonus = Math.min((salah.taraweeh || 0) / 20 * 5, 5);
+  // Taraweeh bonus based on rakaat count (up to 15% for 20 rakaat)
+  const taraweehBonus = Math.min((salah.taraweeh || 0) / 20 * 15, 15);
   bonus += taraweehBonus;
   
-  if (salah.witr) bonus += 3;
+  if (salah.witr) bonus += 5;
   
-  // Sunnah rakaat bonus (up to 2%)
-  const sunnahBonus = Math.min((salah.sunnahRakaat || 0) / 10, 2);
+  // Sunnah rakaat bonus (up to 5%)
+  const sunnahBonus = Math.min((salah.sunnahRakaat || 0) / 20, 5);
   bonus += sunnahBonus;
   
-  return Math.min(fardPercentage + bonus, 100);
+  // Total = Fard (50%) + Bonuses (max 50%) = max 100%
+  return fardPercentage + bonus;
 };
 
 // Calculate Quran score (0-100%)
