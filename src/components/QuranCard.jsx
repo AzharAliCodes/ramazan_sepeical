@@ -8,36 +8,67 @@ const QuranCard = ({ quran, onChange, currentDay, allData }) => {
   const lastDayRef = useRef(currentDay);
   const initializedRef = useRef(false);
 
-  // Auto-set start page from the global current page position
-  useEffect(() => {
-    // Reset initialized flag when day changes
-    if (lastDayRef.current !== currentDay) {
-      lastDayRef.current = currentDay;
-      initializedRef.current = false;
-    }
+// Choose ONE: 'backward' | 'global' | 'hybrid'
+const TRACKING_STRATEGY = 'hybrid'; 
 
-    // Only run once per day unless manually editing
-    if (!manualEdit && !initializedRef.current) {
-      if (currentDay > 1 && allData && allData.days) {
-        // Use the global currentPage which auto-resets after Khatam
-        const globalCurrentPage = quran.currentPage || 2;
-        
-        // Only update if different from current start page
-        if (quran.startPage !== globalCurrentPage) {
-          onChange({ ...quran, startPage: globalCurrentPage });
-          initializedRef.current = true;
-        } else if (quran.startPage === globalCurrentPage) {
-          initializedRef.current = true;
-        }
-      } else if (currentDay === 1 && quran.startPage === 0) {
-        // Day 1 starts at page 2
-        onChange({ ...quran, startPage: 2 });
-        initializedRef.current = true;
-      } else if (quran.startPage > 0) {
-        initializedRef.current = true;
+useEffect(() => {
+  // Reset initialized flag when day changes
+  if (lastDayRef.current !== currentDay) {
+    lastDayRef.current = currentDay;
+    initializedRef.current = false;
+  }
+
+  // Skip if already initialized or user is manually editing
+  if (manualEdit || initializedRef.current) return;
+
+  // Day 1: Always start at page 2
+  if (currentDay === 1) {
+    if (quran.startPage !== 2) {
+      onChange({ ...quran, startPage: 2 });
+    }
+    initializedRef.current = true;
+    return;
+  }
+
+  // Day 2+: Find where to start
+  let nextStartPage = null;
+
+  // PRIORITY 1: Backward tracking - find last day with reading
+  if (allData?.days) {
+    for (let day = currentDay - 1; day >= 1; day--) {
+      const dayData = allData.days[day];
+      if (dayData?.quran?.endPage > 0) {
+        nextStartPage = dayData.quran.endPage;
+        break;
       }
     }
-  }, [currentDay, manualEdit]);
+  }
+
+  // PRIORITY 2: Fallback to global currentPage if no previous day found
+  if (nextStartPage === null && quran.currentPage > 0) {
+    nextStartPage = quran.currentPage;
+  }
+
+  // PRIORITY 3: Ultimate fallback to page 2
+  if (nextStartPage === null) {
+    nextStartPage = 2;
+  }
+
+  // KHATM RESET: If reached end of Quran (612 or 604), loop back to page 2
+  const LAST_QURAN_PAGE = 612; // or 604 depending on your Mushaf
+  if (nextStartPage >= LAST_QURAN_PAGE) {
+    nextStartPage = 2;
+  }
+
+  // Only update if different
+  if (quran.startPage !== nextStartPage) {
+    onChange({ ...quran, startPage: nextStartPage });
+  }
+  
+  initializedRef.current = true;
+
+}, [currentDay, manualEdit]);
+
 
   // Calculate pages read whenever start/end changes (can be negative if going backward)
   useEffect(() => {
