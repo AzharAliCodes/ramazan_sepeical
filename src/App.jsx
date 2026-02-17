@@ -9,6 +9,7 @@ import GoodDeedsCard from './components/GoodDeedsCard';
 import FinalSummary from './components/FinalSummary';
 import Footer from './components/Footer';
 import { loadData, getDayData, updateDayData } from './utils/storage';
+import { updateQuranGlobalState } from './utils/quranState';
 import { calculateFinalScore } from './utils/scoring';
 
 function App() {
@@ -60,7 +61,16 @@ function App() {
     setDayData(updatedDayData);
     
     // Save to localStorage
-    const updatedAllData = updateDayData(allData, currentDay, updatedDayData);
+    let updatedAllData = updateDayData(allData, currentDay, updatedDayData);
+    
+    // If updating Quran, sync global state across all days
+    if (field === 'quran') {
+      updatedAllData = updateQuranGlobalState(updatedAllData, currentDay, updatedDayData);
+      // Re-fetch current day data with updated global state
+      const refreshedDayData = updatedAllData.days[currentDay];
+      setDayData(refreshedDayData);
+    }
+    
     setAllData(updatedAllData);
   };
 
@@ -91,6 +101,8 @@ function App() {
         <QuranCard
           quran={dayData.quran}
           onChange={(value) => updateField('quran', value)}
+          currentDay={currentDay}
+          allData={allData}
         />
 
         <DhikrCard

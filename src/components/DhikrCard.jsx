@@ -18,7 +18,8 @@ const DhikrCard = ({ dhikr, onChange }) => {
   const dhikrItems = [
     { name: 'subhanallah', label: 'Subhanallah (300+)' },
     { name: 'alhamdulillah', label: 'Alhamdulillah (300+)' },
-    { name: 'allahuAkbar', label: 'Allahu Akbar (300+)' }
+    { name: 'allahuAkbar', label: 'Allahu Akbar (300+)' },
+    { name: 'daroodh', label: 'Daroodh (100+)' }
   ];
 
   return (

@@ -17,8 +17,12 @@ export const getEmptyDayData = () => ({
     sunnahRakaat: 0
   },
   quran: {
-    pages: 0,
-    surah: ''
+    startPage: 0,        // Daily start page (2-612)
+    endPage: 0,          // Daily end page (2-612)
+    pagesRead: 0,        // Auto-calculated: endPage - startPage
+    totalPagesRead: 0,   // Cumulative total across all days (global)
+    currentPage: 2,      // Current position in Quran (2-612, global)
+    khatamCount: 0       // Number of completions (global)
   },
   dhikr: {
     subhanallah: 0,
@@ -60,12 +64,24 @@ export const loadData = () => {
     if (data.days) {
       Object.keys(data.days).forEach(dayKey => {
         const day = data.days[dayKey];
+        
+        // Migrate good deeds
         if (day.goodDeeds && day.goodDeeds.length > 0) {
-          // Check if old format (object with description field)
           if (typeof day.goodDeeds[0] === 'object' && day.goodDeeds[0].description !== undefined) {
-            // Migrate to new format (simple strings)
             day.goodDeeds = day.goodDeeds.map(deed => deed.description || '');
           }
+        }
+        
+        // Migrate old quran format to new format
+        if (day.quran && day.quran.pages !== undefined) {
+          day.quran = {
+            startPage: 0,
+            endPage: 0,
+            pagesRead: day.quran.pages || 0,
+            totalPagesRead: day.quran.pages || 0,
+            currentPage: 2,
+            khatamCount: 0
+          };
         }
       });
       // Save migrated data

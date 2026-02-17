@@ -60,7 +60,7 @@ export const calculateSalahScore = (salah) => {
 
 // Calculate Quran score (0-100%)
 export const calculateQuranScore = (quran) => {
-  const pages = quran.pages || 0;
+  const pages = quran.pagesRead || 0;
   return Math.min((pages / TARGETS.quranPages) * 100, 100);
 };
 
