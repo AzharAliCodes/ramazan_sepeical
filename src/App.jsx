@@ -7,6 +7,7 @@ import DisciplineCard from './components/DisciplineCard';
 import GratitudeCard from './components/GratitudeCard';
 import GoodDeedsCard from './components/GoodDeedsCard';
 import FinalSummary from './components/FinalSummary';
+import Footer from './components/Footer';
 import { loadData, getDayData, updateDayData } from './utils/storage';
 import { calculateFinalScore } from './utils/scoring';
 
@@ -113,6 +114,8 @@ function App() {
         />
 
         <FinalSummary scores={scores} />
+        
+        <Footer />
       </div>
     </div>
   );
