@@ -2,7 +2,17 @@ import React from 'react';
 import { calculateSalahScore } from '../utils/scoring';
 
 const SalahCard = ({ salah, onChange }) => {
-  const score = calculateSalahScore(salah);
+  const totalScore = calculateSalahScore(salah);
+  
+  // Calculate Fard completion separately (0-100%)
+  const fardCount = [
+    salah.fajr,
+    salah.dhuhr,
+    salah.asr,
+    salah.maghrib,
+    salah.isha
+  ].filter(Boolean).length;
+  const fardScore = (fardCount / 5) * 100;
 
   const handleCheckboxChange = (name, value) => {
     onChange({ ...salah, [name]: value });
@@ -52,13 +62,13 @@ const SalahCard = ({ salah, onChange }) => {
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-700">Fard Completion</span>
           <span className="text-sm font-bold text-green-600">
-            {Math.min(score, 100)}%
+            {Math.round(fardScore)}%
           </span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-3">
           <div
             className="bg-green-500 h-3 rounded-full transition-all duration-500"
-            style={{ width: `${Math.min(score, 100)}%` }}
+            style={{ width: `${fardScore}%` }}
           ></div>
         </div>
       </div>
@@ -106,10 +116,10 @@ const SalahCard = ({ salah, onChange }) => {
       <div className="mt-6 p-4 bg-emerald-50 rounded-lg">
         <div className="flex justify-between items-center">
           <span className="text-base font-semibold text-gray-800">
-            Total Salah Score
+            Total Salah Score {totalScore > 100 && <span className="text-xs text-emerald-600">(with bonus)</span>}
           </span>
           <span className="text-2xl font-bold text-emerald-600">
-            {score}%
+            {Math.round(totalScore)}%
           </span>
         </div>
       </div>
