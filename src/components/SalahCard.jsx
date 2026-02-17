@@ -50,7 +50,7 @@ const SalahCard = ({ salah, onChange }) => {
                 <span className="ml-3 text-base font-medium text-gray-800">{label}</span>
               </label>
               <span className="text-sm font-semibold text-gray-600">
-                {salah[name] ? '10%' : '0%'}
+                {salah[name] ? '20%' : '0%'}
               </span>
             </div>
           ))}
