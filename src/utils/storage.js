@@ -12,7 +12,7 @@ export const getEmptyDayData = () => ({
     isha: false,
     tahajjud: false,
     duha: false,
-    taraweeh: false,
+    taraweeh: 0,
     witr: false,
     sunnahRakaat: 0
   },

@@ -42,7 +42,11 @@ export const calculateSalahScore = (salah) => {
   let bonus = 0;
   if (salah.tahajjud) bonus += 5;
   if (salah.duha) bonus += 5;
-  if (salah.taraweeh) bonus += 5;
+  
+  // Taraweeh bonus based on rakaat count (up to 5% for 20 rakaat)
+  const taraweehBonus = Math.min((salah.taraweeh || 0) / 20 * 5, 5);
+  bonus += taraweehBonus;
+  
   if (salah.witr) bonus += 3;
   
   // Sunnah rakaat bonus (up to 2%)
