@@ -51,9 +51,22 @@ export const calculateSalahScore = (salah) => {
   
   if (salah.witr) bonus += 5;
   
-  // Sunnah rakaat bonus (up to 5% for 26 rakaat)
+  // Sunnah rakaat bonuses
+  // Fixed 24 rakaat = up to 5%
   const sunnahBonus = Math.min((salah.sunnahRakaat || 0) / 26 * 5, 5);
   bonus += sunnahBonus;
+  
+  // Additional variable Sunnah prayers
+  // Possible: before Dhuhr (4) + after Dhuhr (4) + before Asr (4) + after Maghrib (2) + before Isha (4) + after Isha (4) = 22 rakaat max
+  // Contributing up to 7% total
+  const totalVariableSunnah = (salah.sunnahBeforeDhuhr || 0) + 
+                               (salah.sunnahAfterDhuhr || 0) + 
+                               (salah.sunnahBeforeAsr || 0) +
+                               (salah.sunnahAfterMaghrib || 0) +
+                               (salah.sunnahBeforeIsha || 0) +
+                               (salah.sunnahAfterIsha || 0);
+  const variableSunnahBonus = Math.min(totalVariableSunnah / 22 * 7, 7);
+  bonus += variableSunnahBonus;
   
   // Total = Fard (50%) + Bonuses (max 50%) = max 100%
   return fardPercentage + bonus;
