@@ -57,7 +57,7 @@ const DisciplineCard = ({ discipline, onChange, isLocked = false }) => {
           <span>2 hr</span>
           <span>3 hr</span>
           <span>4 hr</span>
-          <span>5 hr</span>
+          <span>5+ hr</span>
         </div>
       </div>
 

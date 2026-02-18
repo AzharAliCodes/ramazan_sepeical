@@ -494,26 +494,32 @@ const SalahCard = ({ salah, onChange, isLocked = false }) => {
           </div>
         </div>
 
-        {/* Taraweeh Rakaat Input */}
+        {/* Taraweeh Rakaat Slider */}
         <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Taraweeh Rakaat Count
-          </label>
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-sm font-medium text-gray-700">
+              Taraweeh Rakaat Count
+            </label>
+            <span className="text-sm font-bold text-emerald-600">
+              {salah.taraweeh || 0} Rakaat
+            </span>
+          </div>
           <input
-            type="number"
+            type="range"
             min="0"
             max="20"
-            value={salah.taraweeh > 0 ? salah.taraweeh : ''}
-            onChange={(e) => {
-              const value = e.target.value;
-              // Limit to 2 digits max
-              if (value === '' || (parseInt(value) >= 0 && parseInt(value) <= 20 && value.length <= 2)) {
-                onChange({ ...salah, taraweeh: value === '' ? 0 : parseInt(value) });
-              }
-            }}
-            placeholder="0"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            step="2"
+            value={salah.taraweeh || 0}
+            onChange={(e) => onChange({ ...salah, taraweeh: parseInt(e.target.value) })}
+            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
           />
+          <div className="flex justify-between mt-1 px-0.5">
+            {[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20].map(val => (
+              <span key={val} className={`text-[10px] ${salah.taraweeh === val ? 'text-emerald-700 font-bold' : 'text-gray-400'}`}>
+                {val}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
