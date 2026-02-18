@@ -37,6 +37,7 @@ export const calculateSalahScore = (salah) => {
     if (val === 'takbir') return 20;
     if (val === 'jamaat') return 15;
     if (val === 'ada') return 5;
+    if (val === 'qaza') return 1;
     return 0;
   };
 

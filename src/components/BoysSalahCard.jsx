@@ -12,6 +12,7 @@ const SalahCard = ({ salah, onChange, isLocked = false }) => {
     if (val === 'takbir') return 20;
     if (val === 'jamaat') return 15;
     if (val === 'ada') return 5;
+    if (val === 'qaza') return 1;
     return 0;
   };
 
@@ -44,7 +45,8 @@ const SalahCard = ({ salah, onChange, isLocked = false }) => {
     const labels = {
       'takbir': 'Takbir-e-Ula',
       'jamaat': 'Jamaat',
-      'ada': 'Ada'
+      'ada': 'Ada',
+      'qaza': 'Qaza'
     };
     
     // Display Percentage Value
@@ -52,6 +54,7 @@ const SalahCard = ({ salah, onChange, isLocked = false }) => {
        if (val === 'takbir') return '20%';
        if (val === 'jamaat') return '15%';
        if (val === 'ada') return '5%';
+       if (val === 'qaza') return '1%';
        return '0%';
     };
 
@@ -124,6 +127,12 @@ const SalahCard = ({ salah, onChange, isLocked = false }) => {
                 className="flex-1 min-w-[80px] px-3 py-2 text-xs font-semibold bg-gray-50 text-gray-700 border border-gray-200 rounded-md hover:bg-gray-100 transition-colors"
               >
                 Ada
+              </button>
+              <button
+                onClick={() => handleFardChange(name, 'qaza')}
+                className="flex-1 min-w-[80px] px-3 py-2 text-xs font-semibold bg-red-50 text-red-700 border border-red-200 rounded-md hover:bg-red-100 transition-colors"
+              >
+                Qaza
               </button>
             </div>
           </div>
