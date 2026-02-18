@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
-import SalahCard from '../components/GirlsSalahCard';
+import SalahCard from '../components/BoysSalahCard';
 import QuranCard from '../components/QuranCard';
 import DhikrCard from '../components/DhikrCard';
 import DisciplineCard from '../components/DisciplineCard';
