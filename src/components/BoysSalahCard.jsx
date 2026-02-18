@@ -6,15 +6,22 @@ const SalahCard = ({ salah, onChange, isLocked = false }) => {
 
   const totalScore = calculateSalahScore(salah);
   
-  // Calculate Fard completion separately (0-100%)
-  const fardCount = [
+  // Calculate Fard completion based on new point system (0-100)
+  const getPrayerPoints = (val) => {
+    if (val === true) return 20;
+    if (val === 'takbir') return 20;
+    if (val === 'jamaat') return 15;
+    if (val === 'ada') return 5;
+    return 0;
+  };
+
+  const fardScore = [
     salah.fajr,
     salah.dhuhr,
     salah.asr,
     salah.maghrib,
     salah.isha
-  ].filter(Boolean).length;
-  const fardScore = (fardCount / 5) * 100;
+  ].reduce((sum, val) => sum + getPrayerPoints(val), 0);
 
   const handleFardChange = (name, type) => {
     if (!isLocked) {
@@ -38,6 +45,14 @@ const SalahCard = ({ salah, onChange, isLocked = false }) => {
       'takbir': 'Takbir-e-Ula',
       'jamaat': 'Jamaat',
       'ada': 'Ada'
+    };
+    
+    // Display Percentage Value
+    const getDisplayPercentage = (val) => {
+       if (val === 'takbir') return '20%';
+       if (val === 'jamaat') return '15%';
+       if (val === 'ada') return '5%';
+       return '0%';
     };
 
     return (
@@ -82,7 +97,7 @@ const SalahCard = ({ salah, onChange, isLocked = false }) => {
           </div>
           
           <span className="text-sm font-semibold text-gray-600">
-            {isCompleted ? '20%' : '0%'}
+            {isCompleted ? getDisplayPercentage(currentValue) : '0%'}
           </span>
         </div>
 

@@ -29,16 +29,29 @@ export const DEED_POINTS = {
 
 // Calculate Salah score (0-100% max)
 export const calculateSalahScore = (salah) => {
-  const fardCount = [
+  // Calculate Fard score based on type
+  // Takbir-e-Ula = 20, Jamaat = 15, Ada = 5
+  // Boolean true (Girls/Legacy) = 20 (Full points)
+  const getPrayerPoints = (val) => {
+    if (val === true) return 20;
+    if (val === 'takbir') return 20;
+    if (val === 'jamaat') return 15;
+    if (val === 'ada') return 5;
+    return 0;
+  };
+
+  const fardPoints = [
     salah.fajr,
     salah.dhuhr,
     salah.asr,
     salah.maghrib,
     salah.isha
-  ].filter(Boolean).length;
+  ].reduce((sum, val) => sum + getPrayerPoints(val), 0);
   
-  // Fard prayers = 50% total (10% each)
-  const fardPercentage = (fardCount / 5) * 50;
+  // Fard prayers = 50% of Total Score
+  // fardPoints (0-100) maps to 50% max
+  const fardValues = fardPoints; // Keep raw 0-100 for display logic if needed
+  const fardPercentage = fardPoints * 0.5; // Scale to 50% weight
   
   // Extra salah bonuses (adjusted to max 50% total)
   let bonus = 0;
@@ -76,7 +89,7 @@ export const calculateSalahScore = (salah) => {
   bonus += sunnahBonus;
   
   // Total bonuses: 12+8+6+10+4+14 = 54% (capped at 50% max)
-  // Total = Fard (50%) + Bonuses (max 50%) = 100% max
+  // Total = Fard (Weighted 50%) + Bonuses (max 50%) = 100% max
   return Math.min(fardPercentage + bonus, 100);
 };
 
