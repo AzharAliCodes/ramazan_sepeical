@@ -375,22 +375,19 @@ const SalahCard = ({ salah, onChange, isLocked = false }) => {
               </label>
             </div>
             {salah.tahajjud > 0 && (
-              <div className="ml-6 flex items-center">
-                <input
-                  type="number"
-                  min="2"
-                  max="99"
-                  value={salah.tahajjud}
-                  onChange={(e) => {
-                    if (isLocked) return;
-                    const val = parseInt(e.target.value);
-                    if (val >= 0 && val <= 99) {
-                      onChange({ ...salah, tahajjud: val });
-                    }
-                  }}
-                  disabled={isLocked}
-                  className="w-20 px-2 py-1 text-sm border border-indigo-300 rounded focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                />
+              <div className="flex gap-3 ml-6">
+                {[2, 4, 6, 8].map(count => (
+                  <label key={count} className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={salah.tahajjud === count}
+                      onChange={() => !isLocked && onChange({ ...salah, tahajjud: count })}
+                      disabled={isLocked}
+                      className="w-3 h-3 text-indigo-600 focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                    <span className="ml-1 text-xs text-indigo-700">{count} Rakaat</span>
+                  </label>
+                ))}
               </div>
             )}
           </div>
@@ -413,22 +410,19 @@ const SalahCard = ({ salah, onChange, isLocked = false }) => {
               </label>
             </div>
             {salah.duha > 0 && (
-              <div className="ml-6 flex items-center">
-                <input
-                  type="number"
-                  min="2"
-                  max="99"
-                  value={salah.duha}
-                  onChange={(e) => {
-                    if (isLocked) return;
-                    const val = parseInt(e.target.value);
-                    if (val >= 0 && val <= 99) {
-                      onChange({ ...salah, duha: val });
-                    }
-                  }}
-                  disabled={isLocked}
-                  className="w-20 px-2 py-1 text-sm border border-yellow-300 rounded focus:ring-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                />
+              <div className="flex gap-3 ml-6">
+                {[2, 4, 6, 8].map(count => (
+                  <label key={count} className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={salah.duha === count}
+                      onChange={() => !isLocked && onChange({ ...salah, duha: count })}
+                      disabled={isLocked}
+                      className="w-3 h-3 text-yellow-600 focus:ring-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                    <span className="ml-1 text-xs text-yellow-700">{count} Rakaat</span>
+                  </label>
+                ))}
               </div>
             )}
           </div>
