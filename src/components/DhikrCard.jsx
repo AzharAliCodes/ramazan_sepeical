@@ -16,10 +16,10 @@ const DhikrCard = ({ dhikr, onChange, isLocked = false }) => {
   };
 
   const dhikrItems = [
-    { name: 'subhanallah', label: 'Subhanallah (300+)' },
-    { name: 'alhamdulillah', label: 'Alhamdulillah (300+)' },
-    { name: 'allahuAkbar', label: 'Allahu Akbar (300+)' },
-    { name: 'daroodh', label: 'Daroodh (100+)' }
+    { name: 'subhanallah', label: 'سبحان اللہ، الحمدللہ، لا الٰہ الا اللہ، اللہ اکبر(100)' },
+    { name: 'alhamdulillah', label: 'دعا (10+ منٹ)' },
+    { name: 'allahuAkbar', label: 'استغفراللہ (100+)' },
+    { name: 'daroodh', label: 'درود شریف (100+)' }
   ];
 
   return (
