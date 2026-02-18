@@ -82,6 +82,14 @@ function App() {
     );
   }
 
+  // Calculate isLocked - same logic as Sidebar
+  const RAMADAN_START = new Date('2026-02-01');
+  const today = new Date();
+  const diffTime = today - RAMADAN_START;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+  const actualCurrentDay = Math.max(1, Math.min(diffDays, 30));
+  const isLocked = currentDay < actualCurrentDay;
+
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-12 min-h-screen bg-amber-50">
       {/* Sidebar */}
@@ -89,6 +97,7 @@ function App() {
         currentDay={currentDay}
         scores={scores}
         onDayChange={handleDayChange}
+        allData={allData}
       />
 
       {/* Main Content */}
@@ -96,6 +105,7 @@ function App() {
         <SalahCard
           salah={dayData.salah}
           onChange={(value) => updateField('salah', value)}
+          isLocked={isLocked}
         />
 
         <QuranCard
@@ -103,26 +113,31 @@ function App() {
           onChange={(value) => updateField('quran', value)}
           currentDay={currentDay}
           allData={allData}
+          isLocked={isLocked}
         />
 
         <DhikrCard
           dhikr={dayData.dhikr}
           onChange={(value) => updateField('dhikr', value)}
+          isLocked={isLocked}
         />
 
         <DisciplineCard
           discipline={dayData.discipline}
           onChange={(value) => updateField('discipline', value)}
+          isLocked={isLocked}
         />
 
         <GratitudeCard
           gratitude={dayData.gratitude}
           onChange={(value) => updateField('gratitude', value)}
+          isLocked={isLocked}
         />
 
         <GoodDeedsCard
           goodDeeds={dayData.goodDeeds}
           onChange={(value) => updateField('goodDeeds', value)}
+          isLocked={isLocked}
         />
 
         <FinalSummary scores={scores} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { calculateSalahScore } from '../utils/scoring';
 
-const SalahCard = ({ salah, onChange }) => {
+const SalahCard = ({ salah, onChange, isLocked = false }) => {
   const totalScore = calculateSalahScore(salah);
   
   // Calculate Fard completion separately (0-100%)
@@ -15,17 +15,26 @@ const SalahCard = ({ salah, onChange }) => {
   const fardScore = (fardCount / 5) * 100;
 
   const handleCheckboxChange = (name, value) => {
-    onChange({ ...salah, [name]: value });
+    if (!isLocked) {
+      onChange({ ...salah, [name]: value });
+    }
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-4 md:p-6 lg:p-8">
-      <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
-        🕌 Daily Salah Tracking
-      </h2>
+      {isLocked && (
+        <div className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 text-sm">
+          🔒 <strong>View Only:</strong> This is a past day. You cannot edit this data.
+        </div>
+      )}
+      
+      <div className={isLocked ? "pointer-events-none opacity-60" : ""}>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
+          🕌 Daily Salah Tracking
+        </h2>
 
-      {/* Fard Salah Table */}
-      <div className="mb-6">
+        {/* Fard Salah Table */}
+        <div className="mb-6">
         <h3 className="text-lg font-semibold text-gray-700 mb-4">Fard Prayers</h3>
         <div className="space-y-3">
           {/* Sunnah Rakaat Toggle - Before Fajr */}
@@ -35,7 +44,8 @@ const SalahCard = ({ salah, onChange }) => {
                 type="checkbox"
                 checked={salah.sunnahFajr === 2}
                 onChange={(e) => onChange({ ...salah, sunnahFajr: e.target.checked ? 2 : 0 })}
-                className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-2 focus:ring-purple-500 cursor-pointer"
+                disabled={isLocked}
+                className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-2 focus:ring-purple-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <span className="ml-2 text-sm font-medium text-purple-800">Sunnah fajr (2 Rakaat)</span>
             </label>
@@ -203,6 +213,19 @@ const SalahCard = ({ salah, onChange }) => {
             </span>
           </div>
 
+          {/* Sunnah befor Maghrib */}
+          <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={salah.sunnahBeforeMaghrib === 2}
+                onChange={(e) => onChange({ ...salah, sunnahBeforeMaghrib: e.target.checked ? 2 : 0 })}
+                className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-2 focus:ring-purple-500 cursor-pointer"
+              />
+              <span className="ml-2 text-sm font-medium text-purple-800">Sunnah before Maghrib (2 Rakaat)</span>
+            </label>
+          </div>
+
           {/* Maghrib */}
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <label className="flex items-center cursor-pointer flex-1">
@@ -226,10 +249,46 @@ const SalahCard = ({ salah, onChange }) => {
                 type="checkbox"
                 checked={salah.sunnahAfterMaghrib === 2}
                 onChange={(e) => onChange({ ...salah, sunnahAfterMaghrib: e.target.checked ? 2 : 0 })}
-                className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-2 focus:ring-purple-500 cursor-pointer"
+                disabled={isLocked}
+                className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-2 focus:ring-purple-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <span className="ml-2 text-sm font-medium text-purple-800">Sunnah After Maghrib (2 Rakaat)</span>
             </label>
+          </div>
+
+          {/* Awwabeen (Nafl after Maghrib) */}
+          <div className="p-3 bg-pink-50 rounded-lg border border-pink-200">
+            <div className="flex items-center justify-between mb-2">
+              <label className="flex items-center cursor-pointer flex-1">
+                <input
+                  type="checkbox"
+                  checked={salah.awwabeen > 0}
+                  onChange={(e) => !isLocked && onChange({ 
+                    ...salah, 
+                    awwabeen: e.target.checked ? 6 : 0 
+                  })}
+                  disabled={isLocked}
+                  className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-2 focus:ring-pink-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <span className="ml-2 text-sm font-medium text-pink-800">Awwabeen (After Maghrib)</span>
+              </label>
+            </div>
+            {salah.awwabeen > 0 && (
+              <div className="flex gap-3 ml-6">
+                {[2, 4, 6].map(count => (
+                  <label key={count} className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={salah.awwabeen === count}
+                      onChange={() => !isLocked && onChange({ ...salah, awwabeen: count })}
+                      disabled={isLocked}
+                      className="w-3 h-3 text-pink-600 focus:ring-2 focus:ring-pink-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                    <span className="ml-1 text-xs text-pink-700">{count} Rakaat</span>
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Sunnah Before Isha */}
@@ -297,22 +356,96 @@ const SalahCard = ({ salah, onChange }) => {
         <h3 className="text-sm md:text-base font-semibold text-gray-700 mb-4">
           Extra Prayers (Bonus)
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {[
-            { name: 'tahajjud', label: 'Tahajjud' },
-            { name: 'duha', label: 'Ishraq' },
-            { name: 'witr', label: 'Witr' }
-          ].map(({ name, label }) => (
-            <label key={name} className="flex items-center cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors">
+        <div className="space-y-4">
+          {/* Tahajjud */}
+          <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+            <div className="flex items-center justify-between mb-2">
+              <label className="flex items-center cursor-pointer flex-1">
+                <input
+                  type="checkbox"
+                  checked={salah.tahajjud > 0}
+                  onChange={(e) => !isLocked && onChange({ 
+                    ...salah, 
+                    tahajjud: e.target.checked ? 2 : 0 
+                  })}
+                  disabled={isLocked}
+                  className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <span className="ml-2 text-sm font-medium text-indigo-800">Tahajjud</span>
+              </label>
+            </div>
+            {salah.tahajjud > 0 && (
+              <div className="ml-6 flex items-center">
+                <input
+                  type="number"
+                  min="2"
+                  max="99"
+                  value={salah.tahajjud}
+                  onChange={(e) => {
+                    if (isLocked) return;
+                    const val = parseInt(e.target.value);
+                    if (val >= 0 && val <= 99) {
+                      onChange({ ...salah, tahajjud: val });
+                    }
+                  }}
+                  disabled={isLocked}
+                  className="w-20 px-2 py-1 text-sm border border-indigo-300 rounded focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Ishraq (Duha) */}
+          <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+            <div className="flex items-center justify-between mb-2">
+              <label className="flex items-center cursor-pointer flex-1">
+                <input
+                  type="checkbox"
+                  checked={salah.duha > 0}
+                  onChange={(e) => !isLocked && onChange({ 
+                    ...salah, 
+                    duha: e.target.checked ? 2 : 0 
+                  })}
+                  disabled={isLocked}
+                  className="w-4 h-4 rounded border-gray-300 text-yellow-600 focus:ring-2 focus:ring-yellow-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <span className="ml-2 text-sm font-medium text-yellow-800">Ishraq (Duha)</span>
+              </label>
+            </div>
+            {salah.duha > 0 && (
+              <div className="ml-6 flex items-center">
+                <input
+                  type="number"
+                  min="2"
+                  max="99"
+                  value={salah.duha}
+                  onChange={(e) => {
+                    if (isLocked) return;
+                    const val = parseInt(e.target.value);
+                    if (val >= 0 && val <= 99) {
+                      onChange({ ...salah, duha: val });
+                    }
+                  }}
+                  disabled={isLocked}
+                  className="w-20 px-2 py-1 text-sm border border-yellow-300 rounded focus:ring-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Witr */}
+          <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <label className="flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                checked={salah[name]}
-                onChange={(e) => handleCheckboxChange(name, e.target.checked)}
-                className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                checked={salah.witr}
+                onChange={(e) => !isLocked && handleCheckboxChange('witr', e.target.checked)}
+                disabled={isLocked}
+                className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-2 focus:ring-emerald-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               />
-              <span className="ml-2 text-sm text-gray-700">{label}</span>
+              <span className="ml-2 text-sm font-medium text-gray-700">Witr</span>
             </label>
-          ))}
+          </div>
         </div>
 
         {/* Taraweeh Rakaat Input */}
@@ -348,6 +481,7 @@ const SalahCard = ({ salah, onChange }) => {
             {Math.round(totalScore)}%
           </span>
         </div>
+      </div>
       </div>
     </div>
   );

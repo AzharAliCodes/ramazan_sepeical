@@ -1,7 +1,7 @@
 import React from 'react';
 import { calculateDhikrScore } from '../utils/scoring';
 
-const DhikrCard = ({ dhikr, onChange }) => {
+const DhikrCard = ({ dhikr, onChange, isLocked = false }) => {
   const score = calculateDhikrScore(dhikr);
 
   const handleCheckboxChange = (name, value) => {
@@ -24,11 +24,18 @@ const DhikrCard = ({ dhikr, onChange }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-4 md:p-6 lg:p-8">
-      <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
-        📿 Daily Dhikr
-      </h2>
+      {isLocked && (
+        <div className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 text-sm">
+          🔒 <strong>View Only:</strong> This is a past day. You cannot edit this data.
+        </div>
+      )}
+      
+      <div className={isLocked ? "pointer-events-none opacity-60" : ""}>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
+          📿 Daily Dhikr
+        </h2>
 
-      <div className="space-y-3 mb-4 md:mb-6">
+        <div className="space-y-3 mb-4 md:mb-6">
         {dhikrItems.map(({ name, label }) => (
           <div key={name} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <label className="flex items-center cursor-pointer flex-1">
@@ -61,6 +68,7 @@ const DhikrCard = ({ dhikr, onChange }) => {
             style={{ width: `${Math.min(score, 100)}%` }}
           ></div>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { calculateGoodDeedsScore } from '../utils/scoring';
 
-const GoodDeedsCard = ({ goodDeeds, onChange }) => {
+const GoodDeedsCard = ({ goodDeeds, onChange, isLocked = false }) => {
   const score = calculateGoodDeedsScore(goodDeeds);
 
   const handleDeedChange = (index, value) => {
@@ -18,11 +18,18 @@ const GoodDeedsCard = ({ goodDeeds, onChange }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-4 md:p-6 lg:p-8">
-      <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
-        ❤️ Today's Good Deeds
-      </h2>
+      {isLocked && (
+        <div className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 text-sm">
+          🔒 <strong>View Only:</strong> This is a past day. You cannot edit this data.
+        </div>
+      )}
+      
+      <div className={isLocked ? "pointer-events-none opacity-60" : ""}>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
+          ❤️ Today's Good Deeds
+        </h2>
 
-      <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
+        <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
         {goodDeeds.map((deed, index) => (
           <div key={index} className="p-2 md:p-3 bg-gray-50 rounded-lg">
             <input
@@ -50,6 +57,7 @@ const GoodDeedsCard = ({ goodDeeds, onChange }) => {
             style={{ width: `${Math.min(score, 100)}%` }}
           ></div>
         </div>
+      </div>
       </div>
     </div>
   );

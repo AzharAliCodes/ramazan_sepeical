@@ -1,8 +1,8 @@
 import React from 'react';
 
 const Sidebar = ({ currentDay, scores, onDayChange, allData }) => {
-  // Ramadan start date: February 19, 2026
-  const RAMADAN_START = new Date('2026-02-16');
+  // Ramadan start date: February 1, 2026
+  const RAMADAN_START = new Date('2026-02-01');
   
   // Calculate which day of Ramadan today is
   const today = new Date();

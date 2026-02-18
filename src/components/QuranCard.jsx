@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { calculateQuranScore, TARGETS } from '../utils/scoring';
 
-const QuranCard = ({ quran, onChange, currentDay, allData }) => {
+const QuranCard = ({ quran, onChange, currentDay, allData, isLocked = false }) => {
   const score = calculateQuranScore(quran);
   const [error, setError] = useState('');
   const [manualEdit, setManualEdit] = useState(false);
@@ -123,11 +123,18 @@ useEffect(() => {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-4 md:p-6 lg:p-8">
-      <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
-        📖 Quran Reading Tracker
-      </h2>
+      {isLocked && (
+        <div className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 text-sm">
+          🔒 <strong>View Only:</strong> This is a past day. You cannot edit this data.
+        </div>
+      )}
+      
+      <div className={isLocked ? "pointer-events-none opacity-60" : ""}>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
+          📖 Quran Reading Tracker
+        </h2>
 
-      {/* Daily Reading Input */}
+        {/* Daily Reading Input */}
       <div className="mb-4 md:mb-6">
         <div className="flex justify-between items-center mb-3 md:mb-4">
           <h3 className="text-base md:text-lg font-semibold text-gray-700">
@@ -271,6 +278,7 @@ useEffect(() => {
             ></div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

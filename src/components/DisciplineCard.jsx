@@ -1,7 +1,7 @@
 import React from 'react';
 import { calculateDisciplineScore } from '../utils/scoring';
 
-const DisciplineCard = ({ discipline, onChange }) => {
+const DisciplineCard = ({ discipline, onChange, isLocked = false }) => {
   const score = calculateDisciplineScore(discipline.screenTime);
 
   const handleScreenTimeChange = (value) => {
@@ -25,11 +25,18 @@ const DisciplineCard = ({ discipline, onChange }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-4 md:p-6 lg:p-8">
-      <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
-        📵 Discipline (Screen Time)
-      </h2>
+      {isLocked && (
+        <div className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 text-sm">
+          🔒 <strong>View Only:</strong> This is a past day. You cannot edit this data.
+        </div>
+      )}
+      
+      <div className={isLocked ? "pointer-events-none opacity-60" : ""}>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
+          📵 Discipline (Screen Time)
+        </h2>
 
-      <div className="mb-4 md:mb-6">
+        <div className="mb-4 md:mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-2 md:mb-3">
           Hours Spent on Screen Today
         </label>
@@ -82,6 +89,7 @@ const DisciplineCard = ({ discipline, onChange }) => {
             style={{ width: `${score}%` }}
           ></div>
         </div>
+      </div>
       </div>
     </div>
   );

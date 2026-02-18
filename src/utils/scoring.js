@@ -43,11 +43,21 @@ export const calculateSalahScore = (salah) => {
   // Extra salah bonuses (adjusted to max 50% total)
   let bonus = 0;
   
-  if (salah.tahajjud) bonus += 12;  // 12%
-  if (salah.duha) bonus += 8;       // 8%
+  // Proportional bonus based on Rakaat counts
+  // Tahajjud: Target 4 rakaat for full 12% bonus
+  const tahajjudBonus = Math.min((salah.tahajjud || 0) / 4 * 12, 12);
+  bonus += tahajjudBonus;
   
-  // Taraweeh bonus (up to 12% for 20 rakaat)
-  const taraweehBonus = Math.min((salah.taraweeh || 0) / 20 * 12, 12);
+  // Ishraq/Duha: Target 4 rakaat for full 8% bonus
+  const duhaBonus = Math.min((salah.duha || 0) / 4 * 8, 8);
+  bonus += duhaBonus;
+  
+  // Awwabeen: Target 6 rakaat for full 6% bonus
+  const awwabeenBonus = Math.min((salah.awwabeen || 0) / 6 * 6, 6);
+  bonus += awwabeenBonus;
+  
+  // Taraweeh bonus (up to 10% for 20 rakaat, adjusted down from 12%)
+  const taraweehBonus = Math.min((salah.taraweeh || 0) / 20 * 10, 10);
   bonus += taraweehBonus;
   
   if (salah.witr) bonus += 4;  // 4%
@@ -58,13 +68,14 @@ export const calculateSalahScore = (salah) => {
                       (salah.sunnahBeforeDhuhr || 0) + 
                       (salah.sunnahAfterDhuhr || 0) + 
                       (salah.sunnahBeforeAsr || 0) +
+                      (salah.sunnahBeforeMaghrib || 0) +
                       (salah.sunnahAfterMaghrib || 0) +
                       (salah.sunnahBeforeIsha || 0) +
                       (salah.sunnahAfterIsha || 0);
-  const sunnahBonus = Math.min(totalSunnah / 20 * 14, 14);
+  const sunnahBonus = Math.min(totalSunnah / 22 * 14, 14);
   bonus += sunnahBonus;
   
-  // Total bonuses: 12 + 8 + 12 + 4 + 14 = 50% max
+  // Total bonuses: 12+8+6+10+4+14 = 54% (capped at 50% max)
   // Total = Fard (50%) + Bonuses (max 50%) = 100% max
   return Math.min(fardPercentage + bonus, 100);
 };
